@@ -2,6 +2,7 @@ var SprayReader = function(container){
   this.container = $(container);
 };
 SprayReader.prototype = {
+  afterDoneCallback: null,
   wpm: null,
   msPerWord: null,
   wordIdx: null,
@@ -86,6 +87,9 @@ SprayReader.prototype = {
     if (thisObj.wordIdx >= thisObj.words.length) {
       this.wordIdx = 0;
       this.stop();
+      if(typeof(this.afterDoneCallback) === 'function') {
+        this.afterDoneCallback();
+      }
     }
   }
 };
@@ -129,8 +133,12 @@ function pivot(word){
 
     else{
 
+        word = '.......' + word;
+        
         var tail = 22 - (word.length + 7);
-        word = '.......' + word + ('.'.repeat(tail));
+        if(tail > 0) {
+          word + ('.'.repeat(tail));
+        }
 
         var start = word.slice(0, word.length/2);
         var end = word.slice(word.length/2, word.length);
